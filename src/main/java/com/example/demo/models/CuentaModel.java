@@ -2,18 +2,18 @@ package com.example.demo.models;
 
 
 
-public class AccountModel {
+public class CuentaModel {
     private long id;
     private boolean active_card;
     private int available_limit;
 
-    public AccountModel(AccountModel that){
+    public CuentaModel(CuentaModel that){
         this.id = that.id;
         this.active_card = that.active_card;
         this.available_limit = that.available_limit;
     }
 
-    public AccountModel(){
+    public CuentaModel(){
     }
 
     public long getId() {

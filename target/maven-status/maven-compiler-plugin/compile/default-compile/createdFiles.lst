@@ -1,6 +1,1 @@
 com\example\demo\models\Respuestas.class
-com\example\demo\DemoApplication.class
-com\example\demo\controllers\TransactionController.class
-com\example\demo\services\TransactionService.class
-com\example\demo\models\TransactionModel.class
-com\example\demo\models\AccountModel.class

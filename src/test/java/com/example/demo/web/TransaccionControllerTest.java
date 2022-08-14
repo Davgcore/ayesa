@@ -1,6 +1,6 @@
 package com.example.demo.web;
 
-import org.hamcrest.Matchers;
+
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -15,8 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import com.example.demo.DemoApplication;
-import com.example.demo.models.AccountModel;
+import com.example.demo.Demo;
+import com.example.demo.models.CuentaModel;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -27,7 +27,7 @@ import java.util.List;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DemoApplication.class)
+@ContextConfiguration(classes = Demo.class)
 @SpringBootTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TransaccionControllerTest {
@@ -45,8 +45,8 @@ public class TransaccionControllerTest {
 
     @Test
     public void createOneAccount() throws Exception {
-        List<AccountModel> list = new ArrayList<AccountModel>();
-        AccountModel acc = new AccountModel();
+        List<CuentaModel> list = new ArrayList<CuentaModel>();
+        CuentaModel acc = new CuentaModel();
         acc.setId(1);
         acc.setActive_card(true);
         acc.setAvailable_limit(100);
@@ -65,8 +65,8 @@ public class TransaccionControllerTest {
 
     @Test
     public void createOneAccountAndTransaccion() throws Exception {
-        List<AccountModel> list = new ArrayList<AccountModel>();
-        AccountModel acc = new AccountModel();
+        List<CuentaModel> list = new ArrayList<CuentaModel>();
+        CuentaModel acc = new CuentaModel();
         acc.setId(1);
         acc.setActive_card(true);
         acc.setAvailable_limit(100);
@@ -88,8 +88,8 @@ public class TransaccionControllerTest {
 
     @Test
     public void createRepeatAccount() throws Exception {
-        List<AccountModel> list = new ArrayList<AccountModel>();
-        AccountModel acc = new AccountModel();
+        List<CuentaModel> list = new ArrayList<CuentaModel>();
+        CuentaModel acc = new CuentaModel();
         acc.setId(1);
         acc.setActive_card(true);
         acc.setAvailable_limit(100);

@@ -6,14 +6,14 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.example.demo.models.AccountModel;
+import com.example.demo.models.CuentaModel;
 import com.example.demo.models.Respuestas;
-import com.example.demo.models.TransactionModel;
+import com.example.demo.models.TransaccionModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class TransactionService {
-    public List<AccountModel> accounts = new ArrayList<AccountModel>();
-    public List<TransactionModel> transactions = new ArrayList<TransactionModel>();
+public class transaccionService {
+    public List<CuentaModel> accounts = new ArrayList<CuentaModel>();
+    public List<TransaccionModel> transactions = new ArrayList<TransaccionModel>();
 
     public List<Respuestas> executeTransaction(String listTransction){
         List<Respuestas> resp = new ArrayList<Respuestas>();
@@ -24,7 +24,7 @@ public class TransactionService {
             for(Object obj: data){
                 JSONObject item = (JSONObject)obj;
                 if(item.has("transaction")){
-                    resp.add(executeTransaction(objectMapper.readValue(item.get("transaction").toString(), TransactionModel.class)));
+                    resp.add(executeTransaction(objectMapper.readValue(item.get("transaction").toString(), TransaccionModel.class)));
                 }else if(item.has("account")){
                     resp.add(addAccount(objectToAccount(item.getJSONObject("account"))));
                 }
@@ -39,25 +39,25 @@ public class TransactionService {
         return resp;
     }
 
-    private AccountModel objectToAccount(JSONObject obj){
-        AccountModel account = new AccountModel();
+    private CuentaModel objectToAccount(JSONObject obj){
+        CuentaModel account = new CuentaModel();
         account.setActive_card(obj.getBoolean("active-card"));
         account.setAvailable_limit(obj.getInt("available-limit"));
         account.setId(obj.getLong("id"));
         return account;
     }
 
-    private AccountModel findAccountById(long id) {
-        for(AccountModel item : accounts) {
+    private CuentaModel findAccountById(long id) {
+        for(CuentaModel item : accounts) {
             if(item.getId() == id) {
-                return new AccountModel(item);
+                return new CuentaModel(item);
             }
         }
         return null;
     }
 
-    private void setAccount(AccountModel account) {
-        for(AccountModel item : accounts) {
+    private void setAccount(CuentaModel account) {
+        for(CuentaModel item : accounts) {
             if(item.getId() == account.getId()) {
                 item.setAvailable_limit(account.getAvailable_limit());
                 break;
@@ -65,13 +65,13 @@ public class TransactionService {
         }
     }
 
-    private Respuestas addAccount(AccountModel account){
+    private Respuestas addAccount(CuentaModel account){
         Respuestas resp = new Respuestas();
         List<String> validation = new ArrayList<String>();
         resp.setAccount(findAccountById(account.getId()));
         if(resp.getAccount() == null){
             accounts.add(account);
-            resp.setAccount(new AccountModel(account));
+            resp.setAccount(new CuentaModel(account));
             resp.setViolations(validation);
         }else{
             validation.add("account-already-initialized");
@@ -80,7 +80,7 @@ public class TransactionService {
         return resp;
     }
 
-    private Respuestas executeTransaction(TransactionModel transaction){
+    private Respuestas executeTransaction(TransaccionModel transaction){
         Respuestas resp = new Respuestas();
         List<String> validation = new ArrayList<String>();
         resp.setAccount(findAccountById(transaction.getId()));

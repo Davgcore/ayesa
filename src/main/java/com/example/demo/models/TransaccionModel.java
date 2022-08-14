@@ -2,7 +2,7 @@ package com.example.demo.models;
 
 import java.util.Date;
 
-public class TransactionModel {
+public class TransaccionModel {
     private long id;
     private String merchant;
     private int amount;

@@ -3,13 +3,13 @@ package com.example.demo.models;
 import java.util.List;
 
 public class Respuestas {
-    private AccountModel account;
+    private CuentaModel account;
     private List<String> violations;
     
-    public AccountModel getAccount() {
+    public CuentaModel getAccount() {
         return account;
     }
-    public void setAccount(AccountModel account) {
+    public void setAccount(CuentaModel account) {
         this.account = account;
     }
     public List<String> getViolations() {
