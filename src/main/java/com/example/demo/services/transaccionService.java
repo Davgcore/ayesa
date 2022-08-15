@@ -1,7 +1,9 @@
 package com.example.demo.services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,11 +13,11 @@ import com.example.demo.models.Respuestas;
 import com.example.demo.models.TransaccionModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class transaccionService {
-    public List<CuentaModel> accounts = new ArrayList<CuentaModel>();
-    public List<TransaccionModel> transactions = new ArrayList<TransaccionModel>();
+public class TransaccionService {
+    public List<CuentaModel> cuentas = new ArrayList<CuentaModel>();
+    public List<TransaccionModel> transacciones = new ArrayList<TransaccionModel>();
 
-    public List<Respuestas> executeTransaction(String listTransction){
+    public List<Respuestas> doTransaccion(String listTransction){
         List<Respuestas> resp = new ArrayList<Respuestas>();
         try {
             JSONArray data = new JSONArray(listTransction);
@@ -24,9 +26,9 @@ public class transaccionService {
             for(Object obj: data){
                 JSONObject item = (JSONObject)obj;
                 if(item.has("transaction")){
-                    resp.add(executeTransaction(objectMapper.readValue(item.get("transaction").toString(), TransaccionModel.class)));
+                    resp.add(addTransaccion(objectMapper.readValue(item.get("transaction").toString(), TransaccionModel.class)));
                 }else if(item.has("account")){
-                    resp.add(addAccount(objectToAccount(item.getJSONObject("account"))));
+                    resp.add(addAccount(castToCuenta(item.getJSONObject("account"))));
                 }
             }
         } catch (Exception e) {
@@ -39,7 +41,7 @@ public class transaccionService {
         return resp;
     }
 
-    private CuentaModel objectToAccount(JSONObject obj){
+    private CuentaModel castToCuenta(JSONObject obj){
         CuentaModel account = new CuentaModel();
         account.setActive_card(obj.getBoolean("active-card"));
         account.setAvailable_limit(obj.getInt("available-limit"));
@@ -48,7 +50,7 @@ public class transaccionService {
     }
 
     private CuentaModel findAccountById(long id) {
-        for(CuentaModel item : accounts) {
+        for(CuentaModel item : cuentas) {
             if(item.getId() == id) {
                 return new CuentaModel(item);
             }
@@ -57,7 +59,7 @@ public class transaccionService {
     }
 
     private void setAccount(CuentaModel account) {
-        for(CuentaModel item : accounts) {
+        for(CuentaModel item : cuentas) {
             if(item.getId() == account.getId()) {
                 item.setAvailable_limit(account.getAvailable_limit());
                 break;
@@ -70,7 +72,7 @@ public class transaccionService {
         List<String> validation = new ArrayList<String>();
         resp.setAccount(findAccountById(account.getId()));
         if(resp.getAccount() == null){
-            accounts.add(account);
+            cuentas.add(account);
             resp.setAccount(new CuentaModel(account));
             resp.setViolations(validation);
         }else{
@@ -80,7 +82,7 @@ public class transaccionService {
         return resp;
     }
 
-    private Respuestas executeTransaction(TransaccionModel transaction){
+    private Respuestas addTransaccion(TransaccionModel transaction){
         Respuestas resp = new Respuestas();
         List<String> validation = new ArrayList<String>();
         resp.setAccount(findAccountById(transaction.getId()));
@@ -93,11 +95,45 @@ public class transaccionService {
         }else if(resp.getAccount().getAvailable_limit() < transaction.getAmount() ){
             validation.add("insufficient-limit");
             resp.setViolations(validation);
+        }else if (validarDosTransaccionesIguales_DosMin(transaction)){
+            validation.add("doubled-transaction");
+            resp.setViolations(validation);
+        }else if (validarTresTransacciones_DosMin(transaction)){
+            validation.add("high-frequency-small-interval");
+            resp.setViolations(validation);
         }else{
-            transactions.add(transaction);
+            transacciones.add(transaction);
             resp.getAccount().setAvailable_limit(resp.getAccount().getAvailable_limit() - transaction.getAmount());
             setAccount(resp.getAccount());
         }
         return resp;
+    }
+
+    private boolean validarTresTransacciones_DosMin(TransaccionModel transaction){
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(transaction.getTime());
+        endDate.add(Calendar.MINUTE,2);
+
+        Calendar startDate = Calendar.getInstance();
+        startDate.setTime(transaction.getTime());
+        startDate.add(Calendar.MINUTE, -2);
+
+        List<TransaccionModel> list = transacciones.stream().filter(t -> !t.getTime().after(endDate.getTime()) && !t.getTime().before(startDate.getTime())).collect(Collectors.toList());
+
+        return list.size() >= 3 ;
+    }
+
+    private boolean validarDosTransaccionesIguales_DosMin(TransaccionModel transaccion){
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(transaccion.getTime());
+        endDate.add(Calendar.MINUTE,2);
+
+        Calendar startDate = Calendar.getInstance();
+        startDate.setTime(transaccion.getTime());
+        startDate.add(Calendar.MINUTE, -2);
+
+        List<TransaccionModel> list = transacciones.stream().filter(t -> !t.getTime().after(endDate.getTime()) && !t.getTime().before(startDate.getTime()) && t.getMerchant().equals(transaccion.getMerchant())).collect(Collectors.toList());
+
+        return list.size() >= 1 ;
     }
 }
