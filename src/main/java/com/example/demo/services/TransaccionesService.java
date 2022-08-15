@@ -49,7 +49,7 @@ public class TransaccionesService {
         return account;
     }
 
-    private CuentaModel findAccountById(long id) {
+    private CuentaModel obtenerCuentaById(long id) {
         for(CuentaModel item : cuentas) {
             if(item.getId() == id) {
                 return new CuentaModel(item);
@@ -70,7 +70,7 @@ public class TransaccionesService {
     private Respuestas addAccount(CuentaModel account){
         Respuestas resp = new Respuestas();
         List<String> validation = new ArrayList<String>();
-        resp.setAccount(findAccountById(account.getId()));
+        resp.setAccount(obtenerCuentaById(account.getId()));
         if(resp.getAccount() == null){
             cuentas.add(account);
             resp.setAccount(new CuentaModel(account));
@@ -85,7 +85,7 @@ public class TransaccionesService {
     private Respuestas addTransaccion(TransaccionModel transaction){
         Respuestas resp = new Respuestas();
         List<String> validation = new ArrayList<String>();
-        resp.setAccount(findAccountById(transaction.getId()));
+        resp.setAccount(obtenerCuentaById(transaction.getId()));
         if(resp.getAccount() == null){
             validation.add("account-not-initialized");
             resp.setViolations(validation);
