@@ -53,7 +53,7 @@ public class TransaccionControllerTest {
         list.add(acc);
         String data = "[{\"account\":{\"id\":1,\"active-card\":true,\"available-limit\":100}}]";
         
-        mockMvc.perform(MockMvcRequestBuilders.post("/transaction")
+        mockMvc.perform(MockMvcRequestBuilders.post("/transaccion")
             .content(data)
             .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -73,7 +73,7 @@ public class TransaccionControllerTest {
         list.add(acc);
         String data = "[{\"account\":{\"id\":1,\"active-card\":true,\"available-limit\":100}},{\"transaction\": {\"id\": 1, \"merchant\": \"Burger King\", \"amount\": 20, \"time\":\"2019-02-13T10:00:00.000Z\"}}]";
         
-        mockMvc.perform(MockMvcRequestBuilders.post("/transaction")
+        mockMvc.perform(MockMvcRequestBuilders.post("/transaccion")
             .content(data)
             .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -96,7 +96,7 @@ public class TransaccionControllerTest {
         list.add(acc);
         String data = "[{\"account\":{\"id\":1,\"active-card\":true,\"available-limit\":100}},{\"account\":{\"id\":1,\"active-card\":true,\"available-limit\":100}}]";
         
-        mockMvc.perform(MockMvcRequestBuilders.post("/transaction")
+        mockMvc.perform(MockMvcRequestBuilders.post("/transaccion")
             .content(data)
             .accept(MediaType.APPLICATION_JSON))
             .andDo(print())

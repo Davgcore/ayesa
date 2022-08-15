@@ -13,7 +13,7 @@ import com.example.demo.models.Respuestas;
 import com.example.demo.models.TransaccionModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class TransaccionService {
+public class TransaccionesService {
     public List<CuentaModel> cuentas = new ArrayList<CuentaModel>();
     public List<TransaccionModel> transacciones = new ArrayList<TransaccionModel>();
 

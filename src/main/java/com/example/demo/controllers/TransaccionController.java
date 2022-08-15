@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.models.Respuestas;
-import com.example.demo.services.TransaccionService;
+import com.example.demo.services.TransaccionesService;
 
 @RestController
 public class TransaccionController {
-    TransaccionService transaccionService = new TransaccionService();
+    TransaccionesService transaccionService = new TransaccionesService();
     @PostMapping("/transaccion")
     public ResponseEntity<List<Respuestas>> request(@RequestBody String input){
         return ResponseEntity.ok().body(transaccionService.doTransaccion(input));
